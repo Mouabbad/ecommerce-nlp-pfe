@@ -300,11 +300,11 @@ Possible future improvements:
 
 ## 📊 Vendor Dashboard
 
-![Vendor Dashboard](screenshots/statistics.png)
+![Vendor Dashboard](screenshots/dash-vend(1).png)
 
 ## 📊 Vendor statisrics
 
-![Statistics Dashboard](screenshots/statistics.png)
+![Statistics Dashboard](screenshots/vend-statis.png)
 
 ---
 
