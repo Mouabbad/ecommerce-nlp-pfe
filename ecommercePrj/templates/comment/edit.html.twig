@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Style de fond identique à vos autres templates */
+        body {
+            background-color: #f8fafd; /* Bleu très pâle presque blanc */
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+
+        .comment-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            border: 1px solid #eef2f6; /* Bordure bleue très claire */
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            font-size: 1.5rem;
+        }
+
+        /* Styles des champs de formulaire */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 1rem;
+            background: white;
+        }
+
+        .form-control:focus {
+            border-color: #6c5ce7;
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.1);
+        }
+
+        /* Boutons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #6c5ce7;
+            color: white;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background-color: #5a4bd1;
+        }
+
+        .btn-secondary {
+            background-color: white;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8fafd;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Modifier le commentaire{% endblock %}
+
+{% block body %}
+<div class="comment-container">
+    <h1>Modifier le commentaire</h1>
+
+    {{ form_start(commentForm) }}
+        <div class="form-group">
+            {{ form_widget(commentForm.content, {'attr': {'class': 'form-control', 'rows': 5}}) }}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                <i class="bi bi-check-circle me-1"></i> Enregistrer
+            </button>
+            <a href="{{ path('client_dashboard') }}" class="btn btn-secondary">
+                <i class="bi bi-x-circle me-1"></i> Annuler
+            </a>
+        </div>
+    {{ form_end(commentForm) }}
+</div>
+{% endblock %}

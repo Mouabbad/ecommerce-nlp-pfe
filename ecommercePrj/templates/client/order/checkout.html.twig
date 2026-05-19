@@ -1,0 +1,147 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Nouveau style de fond */
+        body {
+            background-color: #f8fafd; /* Bleu très pâle presque blanc */
+            font-family: 'Inter', sans-serif;
+        }
+
+        .order-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .order-header {
+            border-bottom: 2px solid #eef2f6; /* Bordure bleue très claire */
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .order-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #eef2f6; /* Bordure bleue très claire */
+        }
+        
+        .user-greeting {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: #4b5563;
+        }
+        
+        .order-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .order-table th {
+            text-align: left;
+            padding: 1rem;
+            background-color: #f8fafd; /* Fond bleu très pâle */
+            border-bottom: 2px solid #eef2f6;
+            color: #2d3748;
+        }
+        
+        .order-table td {
+            padding: 1rem;
+            border-bottom: 1px solid #eef2f6;
+            vertical-align: top;
+        }
+        
+        .order-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .total-row {
+            font-weight: bold;
+            background-color: #f8fafd; /* Fond bleu très pâle */
+        }
+        
+        .btn-confirm {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+            border-radius: 8px;
+        }
+        
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(108, 92, 231, 0.4);
+        }
+
+        /* Bouton Retour */
+        .btn-outline-secondary {
+            border-color: #eef2f6;
+            color: #4b5563;
+        }
+
+        .btn-outline-secondary:hover {
+            background-color: #f8fafd;
+            border-color: #a0aec0;
+        }
+    </style>
+{% endblock %}
+
+{% block title %}Confirmation de commande{% endblock %}
+
+{% block body %}
+<div class="container py-5 order-container">
+    <div class="order-header">
+        <h1 class="mb-3">Confirmation de commande</h1>
+        <p class="user-greeting">
+            Bonjour <strong>{{ user.username }}</strong>, voici le récapitulatif de votre commande.
+        </p>
+    </div>
+
+    <div class="order-card">
+        <h3 class="mb-4">Détails de la commande</h3>
+        
+        <div class="table-responsive">
+            <table class="order-table">
+                <thead>
+                    <tr>
+                        <th>Produit</th>
+                        <th class="text-center">Quantité</th>
+                        <th class="text-end">Prix unitaire</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cartItems %}
+                    <tr>
+                        <td>{{ item.nom }}</td>
+                        <td class="text-center">{{ item.quantite }}</td>
+                        <td class="text-end">{{ item.prix }} DH</td>
+                        <td class="text-end">{{ item.prix * item.quantite }} DH</td>
+                    </tr>
+                    {% endfor %}
+                    <tr class="total-row">
+                        <td colspan="3" class="text-end">Total général</td>
+                        <td class="text-end">{{ total }} DH</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+            <a href="{{ path('panier_index') }}" class="btn btn-outline-secondary me-md-2">
+                <i class="bi bi-arrow-left me-1"></i> Retour au panier
+            </a>
+            <form method="post" action="{{ path('client_order_confirm') }}">
+                <button type="submit" class="btn-confirm">
+                    <i class="bi bi-check-circle me-1"></i> Confirmer la commande
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

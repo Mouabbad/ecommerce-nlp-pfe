@@ -1,0 +1,320 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --primary-accent: #8b5cf6; /* Violet plus intense pour les vendeurs */
+            --secondary-accent: #10b981;
+            --light-layer: radial-gradient(ellipse at center, rgba(249, 250, 251, 0.98) 0%, rgba(229, 231, 235, 0.95) 100%);
+            --glass-panel: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(203, 213, 225, 0.3);
+            --text-primary: rgba(15, 23, 42, 0.95);
+            --text-secondary: rgba(51, 65, 85, 0.7);
+            --card-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 25% 50%, #ede9fe40 0%, transparent 50%),
+                radial-gradient(circle at 75% 30%, #d1fae540 0%, transparent 50%),
+                var(--light-layer);
+            background-attachment: fixed;
+            color: var(--text-primary);
+            font-family: 'Geist', system-ui, -apple-system, sans-serif;
+            min-height: 100vh;
+        }
+
+        .registration-container {
+            max-width: 600px;
+            margin: 2rem auto;
+            background: var(--glass-panel);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .registration-container:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .registration-title {
+            font-weight: 700;
+            background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .registration-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #6d28d9, #8b5cf6);
+            border-radius: 2px;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.7);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--text-primary);
+        }
+
+        .form-control:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+            border-color: #a78bfa;
+            background: white;
+        }
+
+        .btn-register {
+            background: linear-gradient(90deg, #7c3aed, #8b5cf6);
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            border-radius: 12px;
+            width: 100%;
+            transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+            margin-top: 1rem;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(124, 58, 237, 0.3);
+        }
+
+        .btn-back {
+            background: none;
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+        }
+
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text-primary);
+        }
+
+        .alert {
+            border-radius: 12px;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            border: none;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #047857;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: #b91c1c;
+        }
+
+        .floating-shape {
+            position: absolute;
+            filter: blur(40px);
+            opacity: 0.15;
+            z-index: 0;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            background: #a78bfa;
+            top: 20%;
+            left: 10%;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            background: #34d399;
+            bottom: 10%;
+            right: 15%;
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(20px, 20px); }
+            50% { transform: translate(0, 30px); }
+            75% { transform: translate(-20px, 10px); }
+        }
+
+        @media (max-width: 768px) {
+            .registration-container {
+                padding: 1.5rem;
+                margin: 1rem auto;
+                width: 95%;
+            }
+        }
+
+        .vendor-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(90deg, #7c3aed, #8b5cf6);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 10px rgba(124, 58, 237, 0.2);
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="position-relative" style="min-height: 100vh;">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    
+    <div class="container py-5">
+        <div class="registration-container">
+            <h2 class="registration-title">Inscription Vendeur</h2>
+            <div class="vendor-badge mx-auto">
+                <i class="fas fa-store"></i>
+                <span>Espace Professionnel</span>
+            </div>
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle me-2"></i>{{ message }}
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('danger') %}
+                <div class="alert alert-danger">
+                    <i class="fas fa-exclamation-circle me-2"></i>{{ message }}
+                </div>
+            {% endfor %}
+
+            {{ form_start(registrationForm) }}
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.firstName, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control', 'placeholder': 'Votre prénom'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.lastName, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control', 'placeholder': 'Votre nom'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.username, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.username, {'attr': {'class': 'form-control', 'placeholder': 'Nom d\'utilisateur'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.email.first, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.email.first, {'attr': {'class': 'form-control', 'placeholder': 'email@exemple.com'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.email.second, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.email.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirmez votre email'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.phone, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.phone, {'attr': {'class': 'form-control', 'placeholder': 'Numéro de téléphone'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.city, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.city, {'attr': {'class': 'form-control', 'placeholder': 'Ville'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.address, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.address, {'attr': {'class': 'form-control', 'placeholder': 'Adresse complète'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.companyName, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.companyName, {'attr': {'class': 'form-control', 'placeholder': 'Nom de votre entreprise'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.rib, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.rib, {'attr': {'class': 'form-control', 'placeholder': 'RIB bancaire'}}) }}
+                    <small class="text-muted">Format: BBBBAAAAACCCCCCCCCCCKK</small>
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.plainPassword.first, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control', 'placeholder': 'Mot de passe'}}) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(registrationForm.plainPassword.second, null, {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control', 'placeholder': 'Confirmez le mot de passe'}}) }}
+                </div>
+
+                <button type="submit" class="btn btn-register">
+                    <i class="fas fa-store me-2"></i>Devenir Vendeur
+                </button>
+
+            {{ form_end(registrationForm) }}
+
+            <div class="text-center mt-3">
+                <a href="{{ path('app_home') }}" class="btn btn-back">
+                    <i class="fas fa-arrow-left me-2"></i>Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        // Micro-interaction pour le bouton d'inscription
+        document.querySelector('.btn-register').addEventListener('mousemove', (e) => {
+            const rect = e.target.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            e.target.style.setProperty('--mouse-x', ${x}px);
+            e.target.style.setProperty('--mouse-y', ${y}px);
+        });
+    </script>
+{% endblock %}

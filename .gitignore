@@ -1,0 +1,11 @@
+# Python
+analyze-sent/venv/
+analyze-sent/__pycache__/
+
+# Symfony
+ecommercePrj/vendor/
+ecommercePrj/var/
+ecommercePrj/node_modules/
+
+# Env
+.env

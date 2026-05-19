@@ -1,0 +1,145 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Inter', -apple-system, sans-serif;
+            padding: 2rem;
+        }
+
+        .form-card {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 2.5rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        h1 {
+            color: #1a1a1a;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        /* Style minimal pour les labels */
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        /* Style épuré pour les inputs texte */
+        .text-input {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9375rem;
+            background-color: #f8fafc;
+            transition: all 0.2s;
+        }
+
+        .text-input:focus {
+            outline: none;
+            border-color: #a0aec0;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(210, 214, 220, 0.5);
+        }
+
+        /* Style pour la zone de texte */
+        .textarea-input {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Boutons */
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: #4a5568;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2d3748;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .btn-secondary:hover {
+            background-color: #f8f9fa;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #edf2f7;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="form-card">
+        <h1>Modifier Produit</h1>
+        
+        {{ form_start(form) }}
+            <div class="form-group">
+                <label class="form-label">Nom</label>
+                {{ form_widget(form.nom, {'attr': {'class': 'text-input'}}) }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Description</label>
+                {{ form_widget(form.description, {'attr': {
+                    'class': 'text-input textarea-input',
+                    'rows': 5
+                }}) }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Prix</label>
+                {{ form_widget(form.prix, {'attr': {'class': 'text-input'}}) }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Stock</label>
+                {{ form_widget(form.stock, {'attr': {'class': 'text-input'}}) }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Catégorie</label>
+                {{ form_widget(form.categorie, {'attr': {'class': 'text-input'}}) }}
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Image du produit (jpg/png)</label>
+                {{ form_widget(form.imageFile) }}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+                <a href="{{ path('vendor_dashboard') }}" class="btn btn-secondary">Retour</a>
+            </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

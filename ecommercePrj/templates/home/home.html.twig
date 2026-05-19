@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Page Home</title>
+    <style>
+        /* CSS dyal produit card, n9asr lik f example */
+        .produit-card {
+            border: 1px solid #ddd;
+            padding: 15px;
+            width: 220px;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px #ccc;
+            display: inline-block;
+            vertical-align: top;
+            font-family: Arial, sans-serif;
+        }
+        .produit-image {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+        }
+        .prix {
+            font-weight: bold;
+            color: #3b49df;
+            font-size: 1.2em;
+        }
+        .btn-ajouter, .btn-commentaires {
+            background-color: #3b49df;
+            border: none;
+            color: white;
+            padding: 8px 12px;
+            margin: 5px 5px 0 0;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+        .btn-commentaires {
+            background-color: #5177e8;
+        }
+        .btn-ajouter i, .btn-commentaires i {
+            margin-right: 5px;
+        }
+        .nb-commentaires {
+            background-color: #5177e8;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-size: 0.8em;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <h1>Nos Produits</h1>
+
+    <div class="produits-container">
+        {% for produit in produits %}
+            <div class="produit-card">
+                <img src="{{ produit.imageUrl }}" alt="{{ produit.nom }}" class="produit-image" />
+                <h3>{{ produit.nom }}</h3>
+                <p>{{ produit.description }}</p>
+                <p class="prix">{{ produit.prix }} DH</p>
+
+                <button class="btn-ajouter" data-id="{{ produit.id }}">
+                    <i class="fa fa-shopping-cart"></i> Ajouter
+                </button>
+                <button class="btn-commentaires" data-id="{{ produit.id }}">
+                    <i class="fa fa-comments"></i>
+                </button>
+
+                <p>Commentaires <span class="nb-commentaires">16</span></p>
+            </div>
+        {% endfor %}
+    </div>
+    <script>
+document.getElementById('voir-produits-btn').addEventListener('click', () => {
+    fetch('/homme/produits')
+        .then(response => response.json())
+        .then(data => {
+            const produitsList = document.getElementById('produits-list');
+            produitsList.innerHTML = '';
+
+            data.forEach(produit => {
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <h3>${produit.nom}</h3>
+                    <p>${produit.description}</p>
+                    <p>${produit.prix} DH</p>
+                    <button class="commander-btn" data-id="${produit.id}">Commander</button>
+                `;
+                produitsList.appendChild(div);
+            });
+
+            produitsList.style.display = 'block';
+
+            // Ajout event listener pour les boutons commander
+            document.querySelectorAll('.commander-btn').forEach(button => {
+                button.addEventListener('click', (e) => {
+                    fetch('/homme/commande', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/json'},
+                        body: JSON.stringify({ produitId: e.target.dataset.id }),
+                        credentials: 'include'
+                    })
+                    .then(response => {
+                        if (response.redirected) {
+                            window.location.href = response.url;
+                        } else {
+                            return response.text();
+                        }
+                    })
+                    .then(msg => {
+                        if (msg) alert(msg);
+                    });
+                });
+            });
+        });
+});
+</script>
+
+</body>
+</html>

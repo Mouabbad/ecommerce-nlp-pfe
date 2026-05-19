@@ -1,0 +1,221 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --light: #f8f9fa;
+            --dark: #2d3436;
+            --success: #00b894;
+            --danger: #d63031;
+            --border: #dee2e6;
+            --light-gray: #e9ecef;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            padding: 2rem;
+        }
+        .statistics-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .page-title {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+        .page-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 1.5rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+        }
+        .back-btn:hover {
+            background: #5649c5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(108, 92, 231, 0.2);
+        }
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+        .chart-card:hover {
+            transform: translateY(-5px);
+        }
+        .product-title {
+            color: var(--dark);
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+        }
+        table.comment-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        table.comment-table th, table.comment-table td {
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            text-align: left;
+        }
+        table.comment-table th {
+            background-color: var(--light-gray);
+            color: var(--dark);
+            font-weight: 600;
+        }
+        table.comment-table tbody tr:nth-child(even) {
+            background-color: var(--light);
+        }
+        .sentiment-positive {
+            color: var(--success);
+            font-weight: 600;
+        }
+        .sentiment-negative {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        .sentiment-neutral {
+            color: var(--secondary);
+            font-weight: 600;
+        }
+        .comments-title {
+            margin-top: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="statistics-container">
+        <h1 class="page-title">Analyse de sentiment des produits</h1>
+        
+        <a href="{{ path('vendor_dashboard') }}" class="back-btn">
+            <i class="fas fa-arrow-left mr-2"></i> Retour au tableau de bord
+        </a>
+
+        <div class="charts-grid">
+            {% for stat in stats %}
+                <div class="chart-card">
+                    <h3 class="product-title">{{ stat.produit }}</h3>
+                    <div class="chart-container">
+                        <canvas id="chart-{{ loop.index }}"></canvas>
+                    </div>
+
+                    <h4 class="comments-title">Commentaires des clients</h4>
+                    <table class="comment-table">
+                        <thead>
+                            <tr>
+                                <th>Client</th>
+                                <th>Commentaire</th>
+                                <th>Sentiment</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comment in stat.comments %}
+                                <tr>
+                                    <td>{{ comment.client }}</td>
+                                    <td>{{ comment.commentaire }}</td>
+                                    <td>
+                                        {% if comment.sentiment == 'positive' %}
+                                            <span class="sentiment-positive">Positif</span>
+                                        {% elseif comment.sentiment == 'negative' %}
+                                            <span class="sentiment-negative">Négatif</span>
+                                        {% else %}
+                                            <span class="sentiment-neutral">Neutre</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% else %}
+                                <tr>
+                                    <td colspan="3" style="text-align:center; color: var(--secondary);">Aucun commentaire disponible</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <script>
+        {% for stat in stats %}
+            const ctx{{ loop.index }} = document.getElementById('chart-{{ loop.index }}');
+            new Chart(ctx{{ loop.index }}, {
+                type: 'pie',
+                data: {
+                    labels: ['positif', 'negatif'],
+                    datasets: [{
+                        data: [{{ stat.positive }}, {{ stat.negative }}],
+                        backgroundColor: ['#00b894', '#d63031'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                font: {
+                                    family: 'Segoe UI',
+                                    size: 14
+                                }
+                            }
+                        },
+                        tooltip: {
+                            bodyFont: {
+                                family: 'Segoe UI',
+                                size: 14
+                            }
+                        }
+                    },
+                    cutout: '70%'
+                }
+            });
+        {% endfor %}
+    </script>
+{% endblock %}

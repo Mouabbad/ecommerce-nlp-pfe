@@ -1,0 +1,418 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-light: #818cf8;
+            --primary-dark: #4f46e5;
+            --glass: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            min-height: 100vh;
+            color: var(--dark);
+        }
+
+        .profile-edit-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .profile-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid rgba(99, 102, 241, 0.1);
+        }
+
+        .profile-title {
+            font-size: 2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--glass);
+            backdrop-filter: blur(5px);
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateX(-5px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: var(--glass-shadow);
+            border: 1px solid var(--glass-border);
+            padding: 2.5rem;
+            transition: all 0.4s ease;
+        }
+
+        .profile-card:hover {
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-label i {
+            width: 36px;
+            height: 36px;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
+        }
+
+        .form-icon {
+            position: absolute;
+            right: 1rem;
+            top: 2.7rem;
+            color: var(--gray);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: rgba(99, 102, 241, 0.1);
+            transform: translateY(-3px);
+        }
+
+        /* Floating shapes */
+        .floating-shape {
+            position: absolute;
+            filter: blur(60px);
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .shape-1 {
+            width: 200px;
+            height: 200px;
+            background: var(--primary);
+            top: 10%;
+            right: 10%;
+            border-radius: 50%;
+            animation: float 10s ease-in-out infinite;
+        }
+
+        .shape-2 {
+            width: 150px;
+            height: 150px;
+            background: #f59e0b;
+            bottom: 10%;
+            left: 10%;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            25% { transform: translate(20px, 20px); }
+            50% { transform: translate(0, 30px); }
+            75% { transform: translate(-20px, 10px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.5rem;
+            }
+            
+            .profile-card {
+                padding: 1.5rem;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn-group {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="profile-edit-container">
+    <!-- Floating background shapes -->
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+
+    <div class="profile-header">
+        <h1 class="profile-title">
+            <i class="fas fa-user-edit"></i> Modifier mon profil
+        </h1>
+        <a href="{{ path('client_profile_view') }}" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+
+    <div class="profile-card">
+        {{ form_start(profileForm) }}
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(profileForm.username, null, {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-container">
+                        {{ form_widget(profileForm.username, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Nom d\'utilisateur'
+                        }}) }}
+                        <i class="fas fa-user form-icon"></i>
+                    </div>
+                    {{ form_errors(profileForm.username) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(profileForm.email, null, {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-container">
+                        {{ form_widget(profileForm.email, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Adresse email'
+                        }}) }}
+                        <i class="fas fa-envelope form-icon"></i>
+                    </div>
+                    {{ form_errors(profileForm.email) }}
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    {{ form_label(profileForm.firstName, null, {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-container">
+                        {{ form_widget(profileForm.firstName, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Prénom'
+                        }}) }}
+                        <i class="fas fa-signature form-icon"></i>
+                    </div>
+                    {{ form_errors(profileForm.firstName) }}
+                </div>
+
+                <div class="form-group">
+                    {{ form_label(profileForm.lastName, null, {'label_attr': {'class': 'form-label'}}) }}
+                    <div class="input-container">
+                        {{ form_widget(profileForm.lastName, {'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Nom'
+                        }}) }}
+                        <i class="fas fa-id-card form-icon"></i>
+                    </div>
+                    {{ form_errors(profileForm.lastName) }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                {{ form_label(profileForm.phone, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-container">
+                    {{ form_widget(profileForm.phone, {'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Téléphone'
+                    }}) }}
+                    <i class="fas fa-phone form-icon"></i>
+                </div>
+                {{ form_errors(profileForm.phone) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(profileForm.address, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-container">
+                    {{ form_widget(profileForm.address, {'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Adresse'
+                    }}) }}
+                    <i class="fas fa-map-marker-alt form-icon"></i>
+                </div>
+                {{ form_errors(profileForm.address) }}
+            </div>
+
+            <div class="form-group">
+                {{ form_label(profileForm.city, null, {'label_attr': {'class': 'form-label'}}) }}
+                <div class="input-container">
+                    {{ form_widget(profileForm.city, {'attr': {
+                        'class': 'form-control',
+                        'placeholder': 'Ville'
+                    }}) }}
+                    <i class="fas fa-city form-icon"></i>
+                </div>
+                {{ form_errors(profileForm.city) }}
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+                <a href="{{ path('client_profile_view') }}" class="btn btn-outline">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            </div>
+        {{ form_end(profileForm) }}
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation des champs du formulaire
+            const formGroups = document.querySelectorAll('.form-group');
+            formGroups.forEach((group, index) => {
+                setTimeout(() => {
+                    group.style.opacity = '0';
+                    group.style.transform = 'translateY(20px)';
+                    group.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    
+                    setTimeout(() => {
+                        group.style.opacity = '1';
+                        group.style.transform = 'translateY(0)';
+                    }, 100);
+                }, 150 * index);
+            });
+
+            // Effet hover sur les boutons
+            const buttons = document.querySelectorAll('.btn, .back-btn');
+            buttons.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-3px)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Validation en temps réel
+            const inputs = document.querySelectorAll('.form-control');
+            inputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    if (this.value.trim() !== '') {
+                        this.style.borderColor = 'var(--success)';
+                        this.style.boxShadow = '0 0 0 4px rgba(16, 185, 129, 0.2)';
+                    } else {
+                        this.style.borderColor = '';
+                        this.style.boxShadow = '';
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
