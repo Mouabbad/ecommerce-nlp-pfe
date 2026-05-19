@@ -257,9 +257,65 @@ If the FastAPI server is not running, comment submission will fail or sentiment 
 5. Verify the server is running at `http://127.0.0.1:8001`
 
 ---
-FastAPI server:
 
-```text
-http://127.0.0.1:8001
-```
+# 🔥 Importance of NLP in E-commerce
 
+Natural Language Processing allows companies to automatically understand customer opinions.
+
+Instead of manually reading thousands of reviews, the system can:
+
+- Detect customer satisfaction
+- Identify negative experiences
+- Improve product quality
+- Help vendors make better decisions
+- Monitor customer sentiment automatically
+
+This transforms raw customer comments into valuable business intelligence.
+
+---
+
+# 📈 Future Improvements
+
+Possible future improvements:
+
+- Multi-language sentiment analysis
+- Recommendation system
+- Real-time analytics
+- Deep learning custom model training
+- Advanced admin analytics
+- Product recommendation AI
+
+---
+
+# 🖼️ Screenshots
+
+## 🏠 Admin dashboard
+
+![user management](screenshots/dash-Adm(1).png)
+![Product Statistics by Seller](screenshots/dash-Adm(2).png)
+![Non-owner negative comments](screenshots/dash-Adm(3).png)
+## 💬 Comment Page
+
+![Comment Page](screenshots/add-comment.png)
+
+## 📊 Vendor Dashboard
+
+![Vendor Dashboard](screenshots/statistics.png)
+
+## 📊 Vendor statisrics
+
+![Statistics Dashboard](screenshots/statistics.png)
+
+---
+
+# 👨‍💻 Author
+
+Developed by: **Aya Mouabbad**
+
+Final Year Project (PFE)
+
+---
+
+# 📄 License
+
+This project was developed for educational and academic purposes.
