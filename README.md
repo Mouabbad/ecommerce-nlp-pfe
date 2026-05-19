@@ -236,7 +236,27 @@ pip install fastapi uvicorn transformers torch
 ```bash
 uvicorn main:app --reload
 ```
+---
 
+## ⚠️ Important Note: Running the FastAPI Server
+
+**Before adding any comments or reviews to the platform, ensure that the FastAPI NLP server is running.**
+
+The FastAPI server must be active to:
+- Process customer comments
+- Perform sentiment analysis using DistilBERT
+- Return sentiment results to the Symfony application
+
+If the FastAPI server is not running, comment submission will fail or sentiment analysis will not be performed.
+
+**Steps to ensure FastAPI is running:**
+1. Open a new terminal/command prompt
+2. Navigate to the `analyze-sent` directory
+3. Activate the virtual environment (see section 3️⃣ above)
+4. Start the FastAPI server with: `uvicorn main:app --reload`
+5. Verify the server is running at `http://127.0.0.1:8001`
+
+---
 FastAPI server:
 
 ```text
