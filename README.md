@@ -72,9 +72,9 @@ Model used:
 
 ```text
 distilbert-base-uncased-finetuned-sst-2-english
-
+```
 ---
-## ⚙️ Technologies Used
+# ⚙️ Technologies Used
 
 ### Backend
 
